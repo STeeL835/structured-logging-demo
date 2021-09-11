@@ -1,0 +1,5 @@
+cluster:
+  name: structured_logging_demo
+
+node:
+  name: logs_node
