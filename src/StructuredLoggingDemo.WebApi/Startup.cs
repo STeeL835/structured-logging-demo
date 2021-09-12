@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using StructuredLoggingDemo.WebApi.Services;
 
 namespace StructuredLoggingDemo.WebApi
 {
@@ -32,6 +33,8 @@ namespace StructuredLoggingDemo.WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "StructuredLoggingDemo.WebApi", Version = "v1" });
             });
+
+            services.AddAppServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
