@@ -27,6 +27,9 @@ services:
       - elasticsearch
     volumes:
       - ./stack/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./stack/logstash-pipeline.conf:/usr/share/logstash/pipeline/logstash.conf
+    ports: 
+      - 9001:9001
     networks: 
       - elastic
 
