@@ -16,7 +16,6 @@ namespace StructuredLoggingDemo.WebApi.Services
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-
         public WeatherForecast GetForecast(DateTime date)
         {
             return new WeatherForecast()

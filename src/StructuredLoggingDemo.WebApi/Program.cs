@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Http.BatchFormatters;
@@ -16,7 +13,9 @@ namespace StructuredLoggingDemo.WebApi
     {
         public static void Main(string[] args)
         {
-            Log.Logger = ConfigureSerilog(new LoggerConfiguration()).CreateLogger();
+            Log.Logger = new LoggerConfiguration()
+                .CreateBootstrapLogger()
+                .ForContext<Program>();
 
             try
             {
@@ -37,7 +36,7 @@ namespace StructuredLoggingDemo.WebApi
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseSerilog((context, configuration) => ConfigureSerilog(configuration))
+                .UseSerilog((_, configuration) => ConfigureSerilog(configuration))
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
@@ -47,14 +46,19 @@ namespace StructuredLoggingDemo.WebApi
         private static LoggerConfiguration ConfigureSerilog(LoggerConfiguration config)
         {
             return config
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext} | {Message:lj}{NewLine}{Exception}")
-                .WriteTo.DurableHttpUsingTimeRolledBuffers("http://localhost:9001",
-                    restrictedToMinimumLevel: LogEventLevel.Information,
-                    batchFormatter: new ArrayBatchFormatter(),
-                    bufferPathFormat: "logs/logBuffer-{Date}.json");
+                    .MinimumLevel.Debug()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+
+                    .Enrich.FromLogContext()
+
+                    .WriteTo.Console(
+                        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext} | {Message:lj}{NewLine}{Exception}")
+                    .WriteTo.DurableHttpUsingTimeRolledBuffers("http://localhost:9001",
+                        period: TimeSpan.FromSeconds(2),
+                        restrictedToMinimumLevel: LogEventLevel.Information,
+                        batchFormatter: new ArrayBatchFormatter(),
+                        bufferFileShared: true, // bookmark still locked
+                        bufferPathFormat: "logs/logBuffer-{Date}.json");
         }
     }
 }
