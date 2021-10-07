@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using StructuredLoggingDemo.WebApi.Services;
+using StructuredLoggingDemo.WebApi.Emailing;
+using StructuredLoggingDemo.WebApi.WeatherForecast;
 
 namespace StructuredLoggingDemo.WebApi
 {
@@ -7,7 +8,12 @@ namespace StructuredLoggingDemo.WebApi
     {
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
-            return services.AddScoped<IWeatherForecastService, FakeWeatherForecastService>();
+            return services
+                .AddScoped<IWeatherForecastService, WeatherForecastService>()
+                .AddSingleton<IWeatherAlertsHelper, WeatherAlertsHelper>()
+                .AddScoped<IWeatherAlertsRepository, WeatherAlertsRepository>()
+                .AddScoped<IWeatherAlertsService, WeatherAlertsService>()
+                .AddScoped<IEmailService, EmailService>();
         }
     }
 }
