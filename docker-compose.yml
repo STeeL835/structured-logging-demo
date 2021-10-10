@@ -13,6 +13,7 @@ services:
         hard: -1
         soft: -1
     volumes:
+      - ./stack/elastic/data:/usr/share/elasticsearch/data
       - ./stack/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports: 
       - 9200:9200
