@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (NLog)|AnyCPU'">
-    <DefineConstants>TRACE;NLOG</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NLOG</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (Serilog)|AnyCPU'">
@@ -16,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="Bogus" Version="33.1.1" />
     <PackageReference Include="NLog" Version="4.7.11" />
+    <PackageReference Include="NLog.Targets.Http" Version="1.0.10" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
