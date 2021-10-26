@@ -38,7 +38,7 @@ namespace StructuredLoggingDemo.WebApi.WeatherForecast
         }
 
         [HttpPost("week/email")]
-        public ActionResult GetWeekForecastByEmail([FromQuery] string emailAddress) // TODO: exception
+        public ActionResult GetWeekForecastByEmail([FromQuery] string emailAddress)
         {
             var today = DateTime.Today;
             var forecast =  _forecastService.GetForecast(today, today.AddDays(7));

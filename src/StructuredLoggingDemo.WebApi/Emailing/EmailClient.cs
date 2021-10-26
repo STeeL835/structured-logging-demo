@@ -6,7 +6,7 @@ namespace StructuredLoggingDemo.WebApi.Emailing
     {
         public void SendEmail(string email, string text)
         {
-            if (email.Contains("@fakeemail.com")) throw new Exception("Could not send the message. Service denied the request.");
+            if (email.Contains("@fakeemail")) throw new Exception("Could not send the message. Service denied the request.");
         }
     }
 }
