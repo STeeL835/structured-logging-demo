@@ -29,9 +29,9 @@ namespace StructuredLoggingDemo.WebApi.WeatherForecast
 
         public IEnumerable<Location> GetServedLocations(string source)
         {
-            if (source == "example.com") throw new Exception("Can't parse response"); // wrong source
-            if (source == "demo2.openweatheralerts.com") throw new Exception("Connection refused"); // dead source
-            if (source == "us.v2.openweatheralerts.com") throw new Exception("Can't parse response"); // source with different schema
+            if (source.StartsWith("example.")) LogAndThrow("Can't parse response"); // wrong source
+            if (source.StartsWith("demo2.")) LogAndThrow("Connection refused"); // dead source
+            if (source.StartsWith("us.v2.")) LogAndThrow("Can't parse response"); // source with different schema
 
             return Enumerable.Range(0, _faker.Random.Int(1, 15))
                 .Select(_ => new Location(_faker.Address.Country(), _faker.Address.City()));
@@ -45,12 +45,21 @@ namespace StructuredLoggingDemo.WebApi.WeatherForecast
 
         public void SetupPoller(string source, Location location)
         {
+            if (source.StartsWith("mock.") && location.City.Contains("o"))
+                LogAndThrow("Test poll was unsuccessful"); // some internal error in source
+
             _logger.LogInformation("Pollers are updated");
         }
 
         public void TriggerAlertsNotification()
         {
             _logger.LogInformation("Alerting job {AlertJobId} was triggered", Guid.NewGuid());
+        }
+
+        private void LogAndThrow(string message)
+        {
+            _logger.LogError(message);
+            throw new Exception(message);
         }
     }
 

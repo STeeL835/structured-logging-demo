@@ -19,7 +19,7 @@ namespace StructuredLoggingDemo.WebApi.Emailing
 
         public void SendEmail(string email, string text)
         {
-            // _logger.LogDebug("Sending email to {EmailAddress}", email);
+            _logger.LogDebug("Sending email to {EmailAddress}", email);
 
             var client = new EmailClient();
 

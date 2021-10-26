@@ -23,5 +23,23 @@ namespace StructuredLoggingDemo.WebApi
                     : _faker.Internet.Email()
             }));
         }
+
+        /// <summary>
+        /// Generates a list of random sources with a sprinkle of "broken" ones
+        /// </summary>
+        [HttpPost("random-sources")]
+        public IActionResult GetRandomSources(int amount, float brokenCoefficient = 0.05f)
+        {
+            var brokenPrefixes = new[] {"example", "demo2", "us.v2", "mock"};
+
+            return Ok(Enumerable.Range(0, amount).Select(_ =>
+            {
+                var url = _faker.Internet.DomainName();
+
+                return _faker.Random.Bool(brokenCoefficient)
+                    ? $"{_faker.PickRandom(brokenPrefixes)}.{url}"
+                    : $"{_faker.Internet.DomainWord()}.{url}";
+            }));
+        }
     }
 }

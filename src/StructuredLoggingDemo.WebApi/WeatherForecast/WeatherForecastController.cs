@@ -51,9 +51,9 @@ namespace StructuredLoggingDemo.WebApi.WeatherForecast
 
 
         [HttpPut("upload/alerts")]
-        public ActionResult<IDictionary<string, AlertsUpdateResult>> UpdateAlerts([FromBody] List<string> sources) // TODO: observable process
+        public ActionResult<IDictionary<string, AlertsUpdateResult>> UpdateAlerts([FromBody] List<string> sources) 
         {
-            return Ok(_weatherAlertsService.UpdateAlerts(sources));
+            return Ok(new { TraceId = HttpContext.TraceIdentifier, Result = _weatherAlertsService.UpdateAlerts(sources) });
         }
     }
 }

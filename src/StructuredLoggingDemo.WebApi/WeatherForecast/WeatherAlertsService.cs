@@ -36,12 +36,13 @@ namespace StructuredLoggingDemo.WebApi.WeatherForecast
                     try
                     {
                         UpdateAlertsForSource(source);
-                        alertsUpdateResults.Add(new AlertsUpdateResult(source, true, "Success"));
+                        alertsUpdateResults.Add(new AlertsUpdateResult(source, 200, "Success"));
                     }
                     catch (Exception e)
                     {
                         _logger.LogWarning(e, "Couldn't update alerts from source");
-                        alertsUpdateResults.Add(new AlertsUpdateResult(source, false, "Failed"));
+                        alertsUpdateResults.Add(new AlertsUpdateResult(source, 500, 
+                            "There was an error during source processing. Source wasn't set up correctly, contact administrator"));
                     }
                     _logger.LogInformation("Finished processing source");
                 }
@@ -55,7 +56,7 @@ namespace StructuredLoggingDemo.WebApi.WeatherForecast
 
         private void UpdateAlertsForSource(string source)
         {
-            var locations = _alertsHelper.GetServedLocations(source); // TODO: spontaneous exception, like source is down, or returns some response v2
+            var locations = _alertsHelper.GetServedLocations(source);
 
             foreach (var location in locations)
                 UpdateAlertsForLocation(source, location);
@@ -91,5 +92,5 @@ namespace StructuredLoggingDemo.WebApi.WeatherForecast
         }
     }
 
-    public record AlertsUpdateResult(string Source, bool Ok, string Message);
+    public record AlertsUpdateResult(string Source, int status, string Message);
 }
